@@ -1,0 +1,1 @@
+global using Coordinates = (int X, int Y);
