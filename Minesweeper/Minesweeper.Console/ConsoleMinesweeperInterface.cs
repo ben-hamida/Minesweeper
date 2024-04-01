@@ -8,11 +8,13 @@ using static ConsoleKey;
 internal class ConsoleMinesweeperInterface : IMinesweeperUserInterface
 {
     private Coordinates _activeCell = (0, 0);
+    private TimeSpan _elapsedTime = TimeSpan.Zero;
 
-    public void Draw(Minefield minefield)
+    public void Draw(Minefield minefield, TimeSpan elapsedTime)
     {
         Console.Clear();
-        Console.WriteLine(OutputFormatter.Format(minefield, _activeCell));
+        Console.WriteLine(OutputFormatter.Format(minefield, elapsedTime, _activeCell));
+        _elapsedTime = elapsedTime;
     }
 
     public (Coordinates coordinates, CellAction action) GetNextInput(Minefield minefield)
@@ -31,7 +33,7 @@ internal class ConsoleMinesweeperInterface : IMinesweeperUserInterface
                 case InputType.ToggleFlag: return (input.Value.Coordinates, CellAction.ToggleFlag);
                 case InputType.MoveToCell:
                     _activeCell = input.Value.Coordinates;
-                    Draw(minefield);
+                    Draw(minefield, _elapsedTime);
                     break;
                 default: throw new InvalidEnumArgumentException();
             }
@@ -51,7 +53,7 @@ internal class ConsoleMinesweeperInterface : IMinesweeperUserInterface
                     _activeCell = (0, 0);
                     return true;
                 case N:
-                    Console.WriteLine("Exiting...");
+                    Console.WriteLine("    Exiting...");
                     return false;
             }
         }

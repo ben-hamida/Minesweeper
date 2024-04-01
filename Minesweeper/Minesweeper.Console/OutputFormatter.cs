@@ -2,9 +2,13 @@
 
 internal static class OutputFormatter
 {
-    public static string Format(Minefield minefield, Coordinates activeCell)
+    public static string Format(
+        Minefield minefield,
+        TimeSpan elapsedTime,
+        Coordinates activeCell)
     {
         var horizontalLine = new string('═', minefield.Width * 3);
+        var formattedTime = $"{(int)elapsedTime.TotalMinutes}:{elapsedTime.Seconds:00}";
         return
             $"""
               --------------------------------------
@@ -12,6 +16,7 @@ internal static class OutputFormatter
              | Press space to uncover cell          |
              | Press F to flag/unflag cell          |
               --------------------------------------
+                          🕑 {formattedTime}
                ╔{horizontalLine}╗
                {string.Join("\n  ", Enumerable
                    .Range(0, minefield.Height)
@@ -21,7 +26,7 @@ internal static class OutputFormatter
                  {
                      minefield.GameState switch
                      {
-                         GameState.Win => "Congratulations, you won!",
+                         GameState.Win => $"Congratulations, you won!\n    Your time: {formattedTime}",
                          GameState.Loss => "You lost ☹️",
                          _ => ""
                      }
