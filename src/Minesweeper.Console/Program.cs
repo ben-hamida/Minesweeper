@@ -6,6 +6,7 @@ using Minesweeper.Console;
 
 Console.CursorVisible = false;
 Console.OutputEncoding = Encoding.Unicode;
+Console.Clear();
 
 var minefieldOptions = new MinefieldOptions
 {

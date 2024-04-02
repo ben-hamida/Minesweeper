@@ -12,7 +12,7 @@ internal class ConsoleMinesweeperInterface : IMinesweeperUserInterface
 
     public void Draw(Minefield minefield, TimeSpan elapsedTime)
     {
-        Console.Clear();
+        Console.SetCursorPosition(0, 0);
         Console.WriteLine(OutputFormatter.Format(minefield, elapsedTime, _activeCell));
         _elapsedTime = elapsedTime;
     }
