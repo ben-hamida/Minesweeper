@@ -16,7 +16,7 @@ internal static class OutputFormatter
              | Press space to uncover cell          |
              | Press F to flag/unflag cell          |
               --------------------------------------
-                          🕑 {formattedTime}
+                    🕑 {formattedTime}  🚩 {minefield.NumberOfRemainingFlags}              
                ╔{horizontalLine}╗
                {string.Join("\n  ", Enumerable
                    .Range(0, minefield.Height)
@@ -42,12 +42,12 @@ internal static class OutputFormatter
             ' ',
             Enumerable
                 .Range(0, minefield.Width)
-                .Select(x => GetCell(
+                .Select(x => FormatCell(
                     cellState: minefield.GetCellState((x, rowIndex)),
                     isCurrentCell: activeCell == (x, rowIndex),
                     gameState: minefield.GameState)));
 
-    private static string GetCell(
+    private static string FormatCell(
         CellState cellState,
         bool isCurrentCell,
         GameState gameState) =>

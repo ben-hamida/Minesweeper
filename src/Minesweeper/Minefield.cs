@@ -2,6 +2,8 @@
 
 public class Minefield
 {
+    private readonly MinefieldOptions _options;
+    private readonly int _numberOfBombs;
     private readonly Dictionary<Coordinates, CellState> _cells;
 
     internal Minefield(MinefieldOptions options)
@@ -14,8 +16,8 @@ public class Minefield
             throw new ArgumentException("Invalid bomb placement");
         }
 
-        Width = options.Width;
-        Height = options.Height;
+        _numberOfBombs = bombCoordinates.Count;
+        _options = options;
         _cells = gameCoordinates.ToDictionary(
             coordinates => coordinates,
             coordinates => new CellState(
@@ -23,19 +25,26 @@ public class Minefield
                 NumberOfAdjacentBombs: bombCoordinates.Count(c => coordinates.IsAdjacent(c))));
     }
 
-    public int Width { get; }
+    public int Width => _options.Width;
 
-    public int Height { get; }
+    public int Height => _options.Height;
 
     public GameState GameState { get; private set; } = GameState.Ongoing;
+
+    public int NumberOfRemainingFlags => _numberOfBombs - _cells.Values.Count(cell => cell.IsFlagged);
 
     public CellState GetCellState(Coordinates cellCoordinates) =>
         _cells.TryGetValue(cellCoordinates, out var cellState)
             ? cellState
             : throw new ArgumentException("Cell not found");
 
-    internal void ToggleFlag(Coordinates cellCoordinate) =>
-        GetCellState(cellCoordinate).ToggleFlag();
+    internal void ToggleFlag(Coordinates cellCoordinate)
+    {
+        if (NumberOfRemainingFlags > 0)
+        {
+            GetCellState(cellCoordinate).ToggleFlag();
+        }
+    }
 
     internal void UncoverCell(Coordinates cellCoordinates)
     {
