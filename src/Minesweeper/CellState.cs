@@ -6,7 +6,11 @@ public record CellState(bool HasBomb, int NumberOfAdjacentBombs)
 
     public bool IsFlagged { get; private set; }
 
-    internal void SetUncovered() => IsUncovered = true;
+    internal void SetUncovered()
+    {
+        IsUncovered = true;
+        IsFlagged = false;
+    }
 
     internal void ToggleFlag() => IsFlagged = !IsFlagged;
 }
