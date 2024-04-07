@@ -1,7 +1,4 @@
-﻿using System.Diagnostics;
-using Timer = System.Timers.Timer;
-
-namespace Minesweeper;
+﻿namespace Minesweeper;
 
 public class MinesweeperGame
 {
@@ -34,18 +31,15 @@ public class MinesweeperGame
     {
         var minefield = new Minefield(_options);
 
-        var stopwatch = Stopwatch.StartNew();
-        using var timer = new Timer(TimeSpan.FromSeconds(1));
-        timer.Elapsed += (_, _) => _userInterface.Draw(minefield, stopwatch.Elapsed);
-        timer.Start();
+        using var timer = GameTimer.StartNew(elapsed => _userInterface.Draw(minefield, elapsed));
 
         while (minefield.GameState is GameState.Ongoing)
         {
-             _userInterface.Draw(minefield, stopwatch.Elapsed);
+             _userInterface.Draw(minefield, timer.Elapsed);
             var (coordinates, action) = _userInterface.GetNextInput(minefield);
             ActionMap[action](minefield, coordinates);
         }
 
-        _userInterface.Draw(minefield, stopwatch.Elapsed);
+        _userInterface.Draw(minefield, timer.Elapsed);
     }
 }
